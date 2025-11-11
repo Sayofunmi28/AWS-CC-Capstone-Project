@@ -28,17 +28,19 @@ jobs:
           LOGFILE="storage_actions_$(date +'%Y%m%d_%H%M%S').log"
 
           # Run your script and redirect all stdout/stderr to a log file
-          ./cloud_storage.sh create > storage_actions.log 2>&1
+          ./cloud_storage.sh create > "$LOGFILE" 2>&1
+          echo "LOGFILE=$LOGFILE" >> $GITHUB_ENV
 
           # Optionally, print the last few lines of the log to the job output
           echo "---- Last 20 lines of log ----"
           tail -n 20 storage_actions.log
           echo "------------------------------"
 
-      - name: Upload logs as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: storage-logs
-          path: storage_actions.log
+     - name: Upload logs as artifact
+       uses: actions/upload-artifact@v4
+       with:
+         name: storage-logs
+         path: ${{ env.LOGFILE }}
+
 
 
