@@ -6,6 +6,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,13 +21,23 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y azure-cli
 
-                - name: Upload logs as artifact
-       
+      - name: Run Bash storage script and capture logs
+        run: |
+          # Give execute permission
+          chmod +x cloud_storage.sh
+
+          # Run your script and redirect all stdout/stderr to a log file
+          ./cloud_storage.sh create > storage_actions.log 2>&1
+
+          # Optionally, print the last few lines of the log to the job output
+          echo "---- Last 20 lines of log ----"
+          tail -n 20 storage_actions.log
+          echo "------------------------------"
+
+      - name: Upload logs as artifact
+        uses: actions/upload-artifact@v4
+        with:
           name: storage-logs
           path: storage_actions.log
 
-      - name: Run Bash storage script
-        run: |
-          chmod +x cloud_storage.sh
-          ./cloud_storage.sh create
 
