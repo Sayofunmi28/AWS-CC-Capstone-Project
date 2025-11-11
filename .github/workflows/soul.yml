@@ -25,6 +25,7 @@ jobs:
         run: |
           # Give execute permission
           chmod +x cloud_storage.sh
+          LOGFILE="storage_actions_$(date +'%Y%m%d_%H%M%S').log"
 
           # Run your script and redirect all stdout/stderr to a log file
           ./cloud_storage.sh create > storage_actions.log 2>&1
